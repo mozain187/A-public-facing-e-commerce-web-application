@@ -1,0 +1,79 @@
+for creating Azure AD users and group :
+
+#!/bin/bash
+
+echo "enter the name of the group "
+read GROUP_NAME
+CHECK=$(az ad group show --group $GROUP_NAME --query id -o tsv 2>/dev/null)
+if [[ -n "$CHECK" ]];
+ then
+        echo "group $GROUP_NAME already exist"
+
+
+else
+        az ad group create --display-name $GROUP_NAME --mail-nickname $GROUP_NAME
+fi
+        echo "starting number"
+        read ST
+
+        echo "ending number"
+        read END
+
+        echo "environment?"
+
+        read ENV
+
+        echo "default password"
+        read PASS
+
+        for ((i=ST; i<=END; i++)); do 
+                az ad user create --display-name "$ENV-$i" --password "$PASS" --user-principal-name "$ENV$i@longfway187gmail.onmicrosoft.com" --force-change-password-next-sign-in true
+
+                ID=$(az ad user list --query "[].userPrincipalName" --output table | grep $ENV$i)
+
+                az ad group member add --group $GROUP_NAME --member-id $(az ad user show --id $ID --query id --output tsv)
+
+        done 
+
+---------------------------------------------------------------------------------------------------------
+
+for role assignment :
+
+
+#!/bin/bash
+
+OP=1
+WHAT=create
+echo "enter 1 for creating a role , 2 for deleting"
+read ANS
+
+if [[ $ANS -eq 2 ]]; then
+        $OP=2
+fi
+
+echo "assign to who "
+read ASSIGNEE
+
+echo "enter the role "
+read ROLE
+
+echo "enter the scope"
+read SCOPE
+
+az role assignment $WHAT --assignee $ASSIGNEE --role "$ROLE" --scope $SCOPE
+
+echo "done" 
+
+---------------------------------------------------------------------------------------------------------
+
+
+for testing the deployment :
+
+az bicep build --file main.bicep --stdout
+
+
+---------------------------------------------------------------------------------------------------------
+
+for the infra deployment :✔
+
+ az deployment group create --template-file main.bicep -g hub-rg
