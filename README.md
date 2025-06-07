@@ -31,7 +31,7 @@ The goal is to provide a secure, highly available web app environment accessible
 - GitHub Actions for CI/CD pipeline
 
 ---
-## my humble diagram
+## my humble Architecture Diagram ^-^
 
                      +-----------------------+
                      |       Internet        |
