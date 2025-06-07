@@ -31,7 +31,34 @@ The goal is to provide a secure, highly available web app environment accessible
 - GitHub Actions for CI/CD pipeline
 
 ---
+## my humble diagram
 
+                     +-----------------------+
+                     |       Internet        |
+                     +-----------+-----------+
+                                 |
+                         Public IP (App Gateway)
+                                 |
+                     +-----------+-----------+
+                     |  Application Gateway  |
+                     |  - WAF (Prevention)   |
+                     |  - Custom WAF Rules   |
+                     |  - HTTP to HTTPS      |
+                     +-----------+-----------+
+                                 |
+                         Backend Pool (FQDN)
+                                 |
+                          Azure App Service
+                             (E-Commerce)
+                                 |
+                     +----------------------+
+                     |  Azure Bastion (Admin)|
+                     +-----------+----------+
+                                 |
+                             VNet + Subnets
+                                 |
+                             NSG Rules
+---
 ## Repository Structure
 
 /azure-ecommerce-app/
